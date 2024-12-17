@@ -85,8 +85,6 @@ const endpoint = async (request: Request) => {
 			dateSubmitted			
 		}
 
-		console.log("Logging event:", log)
-
 		await kv.set(["event", body.event, dateSubmitted], log)
 		return new Response("Log recieved", { 
 			status: 200,
