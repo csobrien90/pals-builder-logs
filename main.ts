@@ -2,6 +2,7 @@ const kv = await Deno.openKv()
 
 interface EventBody {
 	event: string
+	eventSessionId: string
 	data: {
 		referredFrom?: string
 		selectedItemsData?: object
@@ -16,6 +17,9 @@ const isValid = (body: EventBody) => {
 	// Confirm body has valid event name
 	if (typeof body.event !== "string" || ["pageLoad", "addToCart"].includes(body.event) === false) return false
 
+	// Confirm body has valid eventSessionId
+	if (typeof body.eventSessionId !== "string") return false
+
 	// Confirm body has data property
 	if (typeof body.data !== "object") return false
 
@@ -23,7 +27,10 @@ const isValid = (body: EventBody) => {
 	if (body.event === "pageLoad") {
 		if (typeof body.data.referredFrom !== "string") return false
 	} else if (body.event === "addToCart") {
-		if (!body.data.selectedItemsData || typeof body.data.url !== "string") return false
+		if (!body.data.selectedItemsData || typeof body.data.url !== "string") {
+			console.log("scrapping addToCart log", body)
+			return false
+		}
 	}
 
 	return true
