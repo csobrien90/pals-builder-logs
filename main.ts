@@ -28,7 +28,6 @@ const isValid = (body: EventBody) => {
 		if (typeof body.data.referredFrom !== "string") return false
 	} else if (body.event === "addToCart") {
 		if (!body.data.selectedItemsData || typeof body.data.url !== "string") {
-			console.log("scrapping addToCart log", body)
 			return false
 		}
 	}
@@ -85,6 +84,8 @@ const endpoint = async (request: Request) => {
 			...body,
 			dateSubmitted			
 		}
+
+		console.log("Logging event:", log)
 
 		await kv.set(["event", body.event, dateSubmitted], log)
 		return new Response("Log recieved", { 
